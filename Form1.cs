@@ -44,7 +44,6 @@ namespace CRUDMahasiswaADO
             }
         }
 
-        // --- MENAMPILKAN DATA ---
         private void btnLoad_Click(object sender, EventArgs e)
         {
             try
@@ -52,7 +51,6 @@ namespace CRUDMahasiswaADO
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                // Menyiapkan kolom tabel
                 dataGridView1.Rows.Clear();
                 dataGridView1.Columns.Clear();
                 dataGridView1.Columns.Add("NIM", "NIM");
@@ -62,12 +60,10 @@ namespace CRUDMahasiswaADO
                 dataGridView1.Columns.Add("Alamat", "Alamat");
                 dataGridView1.Columns.Add("KodeProdi", "Kode Prodi");
 
-                // Menjalankan Query SELECT
                 string query = "SELECT NIM, Nama, JenisKelamin, TanggalLahir, Alamat, KodeProdi FROM Mahasiswa";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataReader reader = cmd.ExecuteReader();
 
-                // Membaca data satu per satu
                 while (reader.Read())
                 {
                     dataGridView1.Rows.Add(
@@ -85,6 +81,63 @@ namespace CRUDMahasiswaADO
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal menampilkan data: " + ex.Message);
+            }
+        }
+
+        // --- TAMBAH DATA (INSERT) ---
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            if (txtNIM.Text == "" || txtNama.Text == "" || txtKodeProdi.Text == "")
+            {
+                MessageBox.Show("Data tidak boleh kosong!");
+                return;
+            }
+
+            try
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                // Cek apakah Kode Prodi sudah ada
+                string cekQuery = "SELECT COUNT(*) FROM ProgramStudi WHERE KodeProdi = @Kode";
+                SqlCommand cmdCek = new SqlCommand(cekQuery, conn);
+                cmdCek.Parameters.AddWithValue("@Kode", txtKodeProdi.Text);
+                int adaProdi = (int)cmdCek.ExecuteScalar();
+
+                // Jika belum ada → insert otomatis
+                if (adaProdi == 0)
+                {
+                    string qProdi = "INSERT INTO ProgramStudi (KodeProdi, NamaProdi) VALUES (@Kode, @Nama)";
+                    SqlCommand cmdProdi = new SqlCommand(qProdi, conn);
+                    cmdProdi.Parameters.AddWithValue("@Kode", txtKodeProdi.Text);
+                    cmdProdi.Parameters.AddWithValue("@Nama", "Prodi Baru " + txtKodeProdi.Text);
+                    cmdProdi.ExecuteNonQuery();
+                }
+
+                // Insert Mahasiswa
+                string query = @"INSERT INTO Mahasiswa 
+                                 (NIM, Nama, JenisKelamin, TanggalLahir, Alamat, KodeProdi) 
+                                 VALUES 
+                                 (@NIM, @Nama, @JK, @Tgl, @Alamat, @KodeProdi)";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@NIM", txtNIM.Text);
+                cmd.Parameters.AddWithValue("@Nama", txtNama.Text);
+                cmd.Parameters.AddWithValue("@JK", cmbJK.Text);
+                cmd.Parameters.AddWithValue("@Tgl", dtpTanggalLahir.Value.Date);
+                cmd.Parameters.AddWithValue("@Alamat", txtAlamat.Text);
+                cmd.Parameters.AddWithValue("@KodeProdi", txtKodeProdi.Text);
+
+                int result = cmd.ExecuteNonQuery();
+                if (result > 0)
+                {
+                    MessageBox.Show("Data Berhasil Disimpan!");
+                    btnLoad.PerformClick(); // refresh otomatis
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal Simpan: " + ex.Message);
             }
         }
     }
