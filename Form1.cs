@@ -84,7 +84,6 @@ namespace CRUDMahasiswaADO
             }
         }
 
-        // --- TAMBAH DATA (INSERT) ---
         private void btnInsert_Click(object sender, EventArgs e)
         {
             if (txtNIM.Text == "" || txtNama.Text == "" || txtKodeProdi.Text == "")
@@ -98,13 +97,11 @@ namespace CRUDMahasiswaADO
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                // Cek apakah Kode Prodi sudah ada
                 string cekQuery = "SELECT COUNT(*) FROM ProgramStudi WHERE KodeProdi = @Kode";
                 SqlCommand cmdCek = new SqlCommand(cekQuery, conn);
                 cmdCek.Parameters.AddWithValue("@Kode", txtKodeProdi.Text);
                 int adaProdi = (int)cmdCek.ExecuteScalar();
 
-                // Jika belum ada → insert otomatis
                 if (adaProdi == 0)
                 {
                     string qProdi = "INSERT INTO ProgramStudi (KodeProdi, NamaProdi) VALUES (@Kode, @Nama)";
@@ -114,7 +111,6 @@ namespace CRUDMahasiswaADO
                     cmdProdi.ExecuteNonQuery();
                 }
 
-                // Insert Mahasiswa
                 string query = @"INSERT INTO Mahasiswa 
                                  (NIM, Nama, JenisKelamin, TanggalLahir, Alamat, KodeProdi) 
                                  VALUES 
@@ -132,12 +128,49 @@ namespace CRUDMahasiswaADO
                 if (result > 0)
                 {
                     MessageBox.Show("Data Berhasil Disimpan!");
-                    btnLoad.PerformClick(); // refresh otomatis
+                    btnLoad.PerformClick();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal Simpan: " + ex.Message);
+            }
+        }
+
+        // --- UPDATE DATA ---
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                string query = @"UPDATE Mahasiswa 
+                                 SET Nama=@Nama, 
+                                     JenisKelamin=@JK, 
+                                     TanggalLahir=@Tgl, 
+                                     Alamat=@Alamat, 
+                                     KodeProdi=@KodeProdi 
+                                 WHERE NIM=@NIM";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@NIM", txtNIM.Text);
+                cmd.Parameters.AddWithValue("@Nama", txtNama.Text);
+                cmd.Parameters.AddWithValue("@JK", cmbJK.Text);
+                cmd.Parameters.AddWithValue("@Tgl", dtpTanggalLahir.Value.Date);
+                cmd.Parameters.AddWithValue("@Alamat", txtAlamat.Text);
+                cmd.Parameters.AddWithValue("@KodeProdi", txtKodeProdi.Text);
+
+                int result = cmd.ExecuteNonQuery();
+                if (result > 0)
+                {
+                    MessageBox.Show("Data Berhasil Diupdate!");
+                    btnLoad.PerformClick();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal Update: " + ex.Message);
             }
         }
     }
