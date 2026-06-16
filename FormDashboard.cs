@@ -148,7 +148,6 @@ namespace CRUDMahasiswaADO
         // c. Button Data Mahasiswa
         private void btnDataMahasiswa_Click(object sender, EventArgs e)
         {
-            // Perbaikan: Mengganti DataMahasiswa menjadi Form1 agar sesuai project kamu
             Form1 frm1 = new Form1();
             frm1.Show();
             this.Hide();

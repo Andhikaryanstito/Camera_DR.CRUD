@@ -16,7 +16,9 @@ namespace CRUDMahasiswaADO
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            // 17. Mengubah target awal running agar otomatis membuka FormDashboard duluan
+            Application.Run(new FormDashboard()); //
         }
     }
 }
