@@ -43,8 +43,38 @@ namespace CRUDMahasiswaADO
             cmbTipe.ValueMember = "Value";
             cmbTipe.SelectedIndex = 0;
             isInitializing = false;
+        }
 
-            // Catatan: loadDataChart(); jangan dipanggil dulu karena method-nya belum kita buat, biar tidak error.
+        // 10. Tambahkan method loadDataChart() (Bagian Awal)
+        public void loadDataChart()
+        {
+            chartProdi.Series.Clear();
+            chartProdi.Titles.Clear();
+            chartProdi.Legends.Clear();
+            chartProdi.ChartAreas.Clear();
+
+            ChartArea ca = new ChartArea("MainArea");
+            ca.AxisX.Title = "Program Studi";
+            ca.AxisY.Title = "Jumlah Mahasiswa";
+            ca.AxisX.LabelStyle.Angle = -45;
+            ca.BackColor = Color.Transparent;
+            chartProdi.ChartAreas.Add(ca);
+
+            try
+            {
+                if (button == 1)
+                {
+                    dt = dbLogic.getDataChartByTahun(dtpTanggalMasuk.Value);
+                }
+                else
+                {
+                    dt = dbLogic.getAllDataChart();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal load data: " + ex.Message);
+            }
         }
 
         private void btnDataMahasiswa_Click(object sender, EventArgs e)
