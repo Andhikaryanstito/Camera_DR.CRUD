@@ -8,7 +8,7 @@ namespace CRUDMahasiswaADO
     public class DAL
     {
         // 1. Menggunakan koneksi lokal asli kamu sesuai halaman 7 modul
-        static string connectionString = @"Data Source=LAPTOP-7SOCNODM\ANDHIKA1; Initial Catalog=db_alat; Integrated Security=True";
+        static string connectionString = @"Data Source=LAPTOP-7SOCNODM\ANDHIKA1; Initial Catalog=DBAkademikADO; User ID=sa; Password=Purworejo123";
 
         public string GetConnectionString()
         {

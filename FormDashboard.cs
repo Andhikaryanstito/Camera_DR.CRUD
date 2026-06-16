@@ -81,7 +81,10 @@ namespace CRUDMahasiswaADO
                     foreach (DataRow row in dt.Rows)
                     {
                         string prodi = row["NamaProdi"].ToString();
-                        int jumlah = Convert.ToInt32((long)row["JmlhMhs"]);
+
+                        // PERBAIKAN: Langsung Convert tanpa casting (long) agar tidak memicu error cast
+                        int jumlah = Convert.ToInt32(row["JmlhMhs"]);
+
                         s.Points.AddXY(prodi, jumlah);
                     }
                     chartProdi.Series.Add(s);
@@ -97,7 +100,10 @@ namespace CRUDMahasiswaADO
                     foreach (DataRow row in dt.Rows)
                     {
                         string prodi = row["NamaProdi"].ToString();
-                        int jumlah = Convert.ToInt32((long)row["JmlhMhs"]);
+
+                        // PERBAIKAN: Langsung Convert tanpa casting (long) agar tidak memicu error cast
+                        int jumlah = Convert.ToInt32(row["JmlhMhs"]);
+
                         s.Points.AddXY(prodi, jumlah);
                     }
                     chartProdi.Series.Add(s);
