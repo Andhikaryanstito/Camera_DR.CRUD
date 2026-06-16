@@ -54,6 +54,61 @@ namespace CRUDMahasiswaADO
             da.Fill(dtMahasiswa);
 
             return dtMahasiswa;
+
+        }
+        public void InsertMhs(string nim, string nama, string alamat, string jenisKelamin, DateTime tanggalLahir, string kodeProdi, byte[] foto)
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.Open();
+            }
+            SqlTransaction trans = conn.BeginTransaction();
+            try
+            {
+                SqlCommand command = new SqlCommand("sp_InsertMahasiswa", conn);
+                command.Transaction = trans;
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("pNIM", nim);
+                command.Parameters.AddWithValue("pNama", nama);
+                command.Parameters.AddWithValue("pAlamat", alamat);
+                command.Parameters.AddWithValue("pTanggalLahir", tanggalLahir);
+                command.Parameters.AddWithValue("pJenisKelamin", jenisKelamin);
+                command.Parameters.AddWithValue("pNmProdi", kodeProdi);
+                command.Parameters.AddWithValue("pFoto", foto);
+
+                command.ExecuteNonQuery();
+                trans.Commit();
+            }
+            catch (Exception ex)
+            {
+                trans.Rollback();
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        public void UpdateMhs(string nim, string nama, string alamat, string jenisKelamin, DateTime tanggalLahir, string kodeProdi, byte[] foto)
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.Open();
+            }
+
+            SqlCommand command = new SqlCommand("sp_UpdateMahasiswa", conn);
+
+            command.Parameters.AddWithValue("pNIM", nim);
+            command.Parameters.AddWithValue("pNama", nama);
+            command.Parameters.AddWithValue("pAlamat", alamat);
+            command.Parameters.AddWithValue("pJenisKelamin", jenisKelamin);
+            command.Parameters.AddWithValue("pTanggalLahir", tanggalLahir);
+            command.Parameters.AddWithValue("pNmProdi", kodeProdi);
+            command.Parameters.AddWithValue("pFoto", foto);
+
+            command.CommandType = CommandType.StoredProcedure;
+            command.ExecuteNonQuery();
         }
     }
 }
