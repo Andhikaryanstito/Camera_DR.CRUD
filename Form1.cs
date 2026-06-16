@@ -238,4 +238,4 @@ namespace CRUDMahasiswaADO
         private void SimpanLog(string pesan) { /* Fungsi Log */ }
         private void btnTestInjection_Click(object sender, EventArgs e) { /* Logika Injection */ }
     }
-}
+} 
