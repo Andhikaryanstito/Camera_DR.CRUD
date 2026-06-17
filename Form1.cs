@@ -142,12 +142,11 @@ namespace CRUDMahasiswaADO
                 txtNIM.Enabled = false;
             }
         }
-
         private void btnConnect_Click(object sender, EventArgs e)
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(dbLogic.GetConnectionString()))
+                using (SqlConnection conn = new SqlConnection(DAL.GetConnectionString()))
                 {
                     conn.Open();
                     MessageBox.Show("Koneksi Berhasil");
