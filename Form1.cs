@@ -2,7 +2,9 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
-using System.IO; // Ditambahkan untuk MemoryStream (Konversi Gambar)
+using System.IO; // Untuk MemoryStream (Konversi Gambar)
+using System.Drawing; // Ditambahkan untuk class Image
+using ExcelDataReader; // Ditambahkan untuk fungsi baca Excel
 
 namespace CRUDMahasiswaADO
 {
@@ -11,7 +13,6 @@ namespace CRUDMahasiswaADO
         // 14.a Tambahkan object untuk mendeklarasikan class DAL
         DAL dbLogic = new DAL();
 
-        // PERBAIKAN: Dikembalikan agar bindingSource terbaca
         private BindingSource bindingSource = new BindingSource();
         private DataTable dtMahasiswa = new DataTable();
 
@@ -32,19 +33,17 @@ namespace CRUDMahasiswaADO
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            LoadData(); // Memanggil fungsi LoadData() yang baru
+            LoadData();
         }
 
         // ==========================================
-        // 14.b MEROMBAK FUNGSI-FUNGSI UTAMA SESUAI MODUL
+        // MEROMBAK FUNGSI-FUNGSI UTAMA SESUAI MODUL
         // ==========================================
 
-        // Merombak Method LoadData() agar menggunakan DAL
         private void LoadData()
         {
             try
             {
-                // PERBAIKAN: Gunakan bindingSource (tanpa angka 1)
                 bindingSource.DataSource = dbLogic.GetMhs();
                 dataGridView1.DataSource = bindingSource;
 
@@ -60,7 +59,6 @@ namespace CRUDMahasiswaADO
 
                 dataGridView1.Enabled = true;
 
-                // PERBAIKAN: Penyesuaian nama tombol sesuai laptopmu
                 btnImpDb.Enabled = false;
                 btnInsert.Enabled = true;
                 btnUpdate.Enabled = true;
@@ -77,14 +75,11 @@ namespace CRUDMahasiswaADO
             }
         }
 
-        // Merombak Method HitungTotal() agar menggunakan DAL
         private void HitungTotal()
         {
             try
             {
                 int total = (dbLogic.CountMhs().Equals(DBNull.Value)) ? 0 : dbLogic.CountMhs();
-
-                // PERBAIKAN: Menggunakan lblTotal sesuai desain laptopmu
                 lblTotal.Text = "Total Mahasiswa : " + total;
             }
             catch (Exception ex)
@@ -94,7 +89,6 @@ namespace CRUDMahasiswaADO
             }
         }
 
-        // Menambahkan Method ClearForm()
         private void ClearForm()
         {
             txtNIM.Enabled = true;
@@ -108,22 +102,51 @@ namespace CRUDMahasiswaADO
             txtNIM.Focus();
         }
 
-        // Menambahkan Method simpanLog()
         public void simpanLog(string message)
         {
             dbLogic.InsertLog(message);
         }
 
         // ==========================================
-        // EVENT TOMBOL
+        // EVENT TOMBOL & DATAGRIDVIEW
         // ==========================================
 
-        // Merombak Event btnConnect_Click
+        // Event Klik Baris DataGridView untuk memunculkan gambar dan data ke TextBox
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                // PERBAIKAN: Menggunakan bindingSource (tanpa angka 1)
+                DataRow row = ((DataRowView)bindingSource[e.RowIndex]).Row;
+                txtNIM.Text = row[0].ToString();
+                txtNama.Text = row[1].ToString();
+                cmbJK.Text = row[2].ToString();
+                dtpTanggalLahir.Value = Convert.ToDateTime(row[3]);
+                txtAlamat.Text = row[4].ToString();
+                txtKodeProdi.Text = row[6].ToString();
+
+                if (row[5] != DBNull.Value)
+                {
+                    byte[] imgBytes = (byte[])row[5];
+                    using (MemoryStream ms = new MemoryStream(imgBytes))
+                    {
+                        fotoMhs.Image = Image.FromStream(ms);
+                        fotoMhs.SizeMode = PictureBoxSizeMode.StretchImage;
+                    }
+                }
+                else
+                {
+                    fotoMhs.Image = null;
+                }
+
+                txtNIM.Enabled = false;
+            }
+        }
+
         private void btnConnect_Click(object sender, EventArgs e)
         {
             try
             {
-                // PERBAIKAN: Menggunakan SqlConnection karena kita pakai SQL Server
                 using (SqlConnection conn = new SqlConnection(dbLogic.GetConnectionString()))
                 {
                     conn.Open();
@@ -160,6 +183,7 @@ namespace CRUDMahasiswaADO
             {
                 byte[] ConvertImageToBytes(PictureBox pb)
                 {
+                    if (pb.Image == null) return null; // Pengaman jika gambar kosong
                     using (MemoryStream ms = new MemoryStream())
                     {
                         pb.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -190,6 +214,7 @@ namespace CRUDMahasiswaADO
             {
                 byte[] ConvertImageToBytes(PictureBox pb)
                 {
+                    if (pb.Image == null) return null; // Pengaman jika gambar kosong
                     using (MemoryStream ms = new MemoryStream())
                     {
                         pb.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -201,7 +226,6 @@ namespace CRUDMahasiswaADO
                 MessageBox.Show("Data mahasiswa berhasil diubah");
                 ClearForm();
 
-                // Menyesuaikan pemanggilan klik tombol load sesuai dengan nama tombolmu
                 btnLoad.PerformClick();
             }
             catch (SqlException ex)
@@ -294,6 +318,115 @@ namespace CRUDMahasiswaADO
 
         private void btnUpload_Click(object sender, EventArgs e)
         {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                fotoMhs.Image = Image.FromFile(ofd.FileName);
+                fotoMhs.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
+        }
+
+        private void btnImpExcel_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Excel Workbook|*.xlsx" })
+            {
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+                    using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                            {
+                                ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                                {
+                                    UseHeaderRow = true
+                                }
+                            });
+                            DataTable dt = result.Tables[0];
+                            dataGridView1.DataSource = dt;
+                            dataGridView1.Enabled = false;
+
+                            btnImpDb.Enabled = true;
+                            btnInsert.Enabled = false;
+                            btnUpdate.Enabled = false;
+                            btnDelete.Enabled = false;
+                            btnCari.Enabled = false;
+                            btnLoad.Enabled = false;
+                            btnResetData.Enabled = false;
+                            btnTestInjection.Enabled = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btnImpDb_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DataTable dt = (DataTable)dataGridView1.DataSource;
+
+                if (dt == null || dt.Rows.Count == 0)
+                {
+                    MessageBox.Show("Tidak ada data untuk diimport.");
+                    return;
+                }
+
+                int sukses = 0;
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    string nim = row["NIM"].ToString().Trim();
+                    string nama = row["Nama"].ToString().Trim();
+                    string jk = row["JenisKelamin"].ToString().Trim();
+                    string alamat = row["Alamat"].ToString().Trim();
+                    string kodeProdi = row["NamaProdi"].ToString().Trim();
+                    string fotoPath = row.Table.Columns.Contains("FotoPath")
+                        ? row["FotoPath"].ToString().Trim()
+                        : string.Empty;
+
+                    if (string.IsNullOrEmpty(nim) || string.IsNullOrEmpty(nama))
+                        continue;
+
+                    DateTime tglLahir;
+                    if (!DateTime.TryParse(row["TanggalLahir"].ToString(), out tglLahir))
+                        continue;
+
+                    byte[] ConvertImageFromPath(string path)
+                    {
+                        if (string.IsNullOrWhiteSpace(path))
+                            return null;
+
+                        if (!File.Exists(path))
+                            return null;
+
+                        return File.ReadAllBytes(path);
+                    }
+                    byte[] fotoBytes = ConvertImageFromPath(fotoPath);
+
+                    dbLogic.InsertMhs(nim, nama, alamat, jk, tglLahir, kodeProdi, fotoBytes);
+
+                    sukses++;
+                }
+
+                MessageBox.Show("Data mahasiswa berhasil ditambahkan");
+                ClearForm();
+                LoadData();
+            }
+            catch (SqlException ex)
+            {
+                simpanLog("Rollback Insert :" + ex.Message);
+                MessageBox.Show("SQL Error :" + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                simpanLog("General Error :" + ex.Message);
+                MessageBox.Show("General Error :" + ex.Message);
+            }
         }
     }
 }
