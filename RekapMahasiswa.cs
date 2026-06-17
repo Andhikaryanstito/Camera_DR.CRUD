@@ -7,6 +7,9 @@ namespace CRUDMahasiswaADO
 {
     public partial class RekapMahasiswa : Form
     {
+        // 15. Tambahkan object untuk mendeklarasikan class DAL pada Form RekapMahasiswa
+        DAL dbLogic = new DAL();
+
         // Connection string menggunakan credential database kamu
         static string connectionString = @"Data Source=LAPTOP-7SOCNODM\ANDHIKA1; Initial Catalog=DBAkademikADO; User ID=sa; Password=Purworejo123";
 
