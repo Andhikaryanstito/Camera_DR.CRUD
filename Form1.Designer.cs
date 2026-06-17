@@ -441,6 +441,7 @@
             this.btnUpload.TabIndex = 25;
             this.btnUpload.Text = "Upload Gambar";
             this.btnUpload.UseVisualStyleBackColor = true;
+            this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
             // btnImpExcel
             // 
