@@ -65,7 +65,6 @@ namespace CRUDMahasiswaADO
             this.mahasiswaTableAdapter = new CRUDMahasiswaADO.DBAkademikADODataSetTableAdapters.MahasiswaTableAdapter();
             this.btnResetData = new System.Windows.Forms.Button();
             this.btnTestInjection = new System.Windows.Forms.Button();
-            this.lblTotal = new System.Windows.Forms.Label();
             this.btnRekapData = new System.Windows.Forms.Button();
             this.fotoMhs = new System.Windows.Forms.PictureBox();
             this.btnUpload = new System.Windows.Forms.Button();
@@ -280,7 +279,7 @@ namespace CRUDMahasiswaADO
             this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator1.Size = new System.Drawing.Size(1376, 27);
+            this.bindingNavigator1.Size = new System.Drawing.Size(1376, 31);
             this.bindingNavigator1.TabIndex = 18;
             this.bindingNavigator1.Text = "bindingNavigator1";
             // 
@@ -290,7 +289,7 @@ namespace CRUDMahasiswaADO
             this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
             this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(29, 24);
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(29, 28);
             this.bindingNavigatorAddNewItem.Text = "Add new";
             // 
             // bindingNavigatorCountItem
@@ -396,15 +395,6 @@ namespace CRUDMahasiswaADO
             this.btnTestInjection.UseVisualStyleBackColor = false;
             this.btnTestInjection.Click += new System.EventHandler(this.btnTestInjection_Click);
             // 
-            // lblTotal
-            // 
-            this.lblTotal.AutoSize = true;
-            this.lblTotal.Location = new System.Drawing.Point(1091, 624);
-            this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(122, 16);
-            this.lblTotal.TabIndex = 21;
-            this.lblTotal.Text = "Total Mahasiswa: 0";
-            // 
             // btnRekapData
             // 
             this.btnRekapData.Location = new System.Drawing.Point(856, 131);
@@ -475,7 +465,6 @@ namespace CRUDMahasiswaADO
             this.Controls.Add(this.btnUpload);
             this.Controls.Add(this.fotoMhs);
             this.Controls.Add(this.btnRekapData);
-            this.Controls.Add(this.lblTotal);
             this.Controls.Add(this.btnTestInjection);
             this.Controls.Add(this.btnResetData);
             this.Controls.Add(this.bindingNavigator1);
@@ -549,7 +538,6 @@ namespace CRUDMahasiswaADO
         private DBAkademikADODataSetTableAdapters.MahasiswaTableAdapter mahasiswaTableAdapter;
         private System.Windows.Forms.Button btnResetData;
         private System.Windows.Forms.Button btnTestInjection;
-        private System.Windows.Forms.Label lblTotal;
         private System.Windows.Forms.Button btnRekapData;
         private System.Windows.Forms.PictureBox fotoMhs;
         private System.Windows.Forms.Button btnUpload;

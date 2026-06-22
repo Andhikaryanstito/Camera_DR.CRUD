@@ -81,7 +81,7 @@ namespace CRUDMahasiswaADO
             try
             {
                 int total = (dbLogic.CountMhs().Equals(DBNull.Value)) ? 0 : dbLogic.CountMhs();
-                lblTotal.Text = "Total Mahasiswa : " + total;
+                lblTotal.Visible = false;
             }
             catch (Exception ex)
             {
