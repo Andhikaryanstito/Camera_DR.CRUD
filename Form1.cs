@@ -350,12 +350,12 @@ namespace CRUDMahasiswaADO
                             });
                             DataTable dt = result.Tables[0];
 
-                            string[] requiredColumns = { "NIM", "Nama", "Alamat", "JenisKelamin", "TanggalLahir", "NamaProdi", "FotoPath" };
+                            string[] requiredColumns = { "NIM", "Nama", "Alamat", "JenisKelamin", "TanggalLahir", "NamaProdi" };
                             foreach (string col in requiredColumns)
                             {
                                 if (!dt.Columns.Contains(col))
                                 {
-                                    MessageBox.Show($"Format Excel salah! Kolom '{col}' tidak ditemukan.\n\nPastikan baris pertama Excel mengandung judul kolom berikut persis seperti ini:\nNIM, Nama, Alamat, JenisKelamin, TanggalLahir, NamaProdi, FotoPath", "Format Tidak Valid", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    MessageBox.Show($"Format Excel salah! Kolom '{col}' tidak ditemukan.\n\nPastikan baris pertama Excel mengandung judul kolom berikut persis seperti ini:\nNIM, Nama, Alamat, JenisKelamin, TanggalLahir, NamaProdi", "Format Tidak Valid", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     return;
                                 }
                             }
