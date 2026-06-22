@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
@@ -425,6 +425,35 @@ namespace CRUDMahasiswaADO
             {
                 simpanLog("General Error :" + ex.Message);
                 MessageBox.Show("General Error :" + ex.Message);
+            }
+        }
+
+        private void btnCari_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(txtNIM.Text))
+                {
+                    MessageBox.Show("Masukkan NIM terlebih dahulu untuk mencari.");
+                    return;
+                }
+
+                DataTable dt = dbLogic.GetMhsByNIM(txtNIM.Text);
+                if (dt.Rows.Count > 0)
+                {
+                    bindingSource.DataSource = dt;
+                    dataGridView1.DataSource = bindingSource;
+                }
+                else
+                {
+                    MessageBox.Show("Data dengan NIM tersebut tidak ditemukan.");
+                    LoadData();
+                }
+            }
+            catch (Exception ex)
+            {
+                simpanLog(ex.Message);
+                MessageBox.Show("Error pencarian: " + ex.Message);
             }
         }
     }

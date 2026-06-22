@@ -1,4 +1,4 @@
-﻿namespace CRUDMahasiswaADO
+namespace CRUDMahasiswaADO
 {
     partial class FormDashboard
     {
@@ -80,6 +80,7 @@
             this.btnLoad.TabIndex = 3;
             this.btnLoad.Text = "Load";
             this.btnLoad.UseVisualStyleBackColor = false;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // btnReset
             // 
@@ -90,6 +91,7 @@
             this.btnReset.TabIndex = 4;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = false;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // cmbTipe
             // 
@@ -98,7 +100,7 @@
             this.cmbTipe.Name = "cmbTipe";
             this.cmbTipe.Size = new System.Drawing.Size(121, 24);
             this.cmbTipe.TabIndex = 5;
-            this.cmbTipe.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.cmbTipe.SelectedValueChanged += new System.EventHandler(this.cmbTipe_SelectedValueChanged);
             // 
             // chartProdi
             // 
