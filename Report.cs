@@ -24,7 +24,18 @@ namespace CRUDMahasiswaADO
             try
             {
                 DataTable dtMahasiswa = dbLogic.getDataRekap(prodi, tglmasuk);
-                dtMahasiswa.TableName = "sp_Report;1";
+
+                if (dtMahasiswa.Columns.Contains("NamaProdi"))
+                    dtMahasiswa.Columns["NamaProdi"].ColumnName = "KodeProdi";
+                if (dtMahasiswa.Columns.Contains("TanggalDaftar"))
+                    dtMahasiswa.Columns["TanggalDaftar"].ColumnName = "TanggalLahir";
+
+                if (!dtMahasiswa.Columns.Contains("NIM"))
+                    dtMahasiswa.Columns.Add("NIM", typeof(string));
+                if (!dtMahasiswa.Columns.Contains("FotoPath"))
+                    dtMahasiswa.Columns.Add("FotoPath", typeof(string));
+
+                dtMahasiswa.TableName = "Mahasiswa";
 
                 // listMahasiswa di modul mengacu pada objek Crystal Report kamu
                 CrystalReport1 listMahasiswa = new CrystalReport1();
