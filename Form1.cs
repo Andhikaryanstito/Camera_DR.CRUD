@@ -45,6 +45,7 @@ namespace CRUDMahasiswaADO
             try
             {
                 bindingSource.DataSource = dbLogic.GetMhs();
+                bindingSource.Sort = "NIM DESC";
                 dataGridView1.DataSource = bindingSource;
 
                 DataGridViewImageColumn fotoColumn = (DataGridViewImageColumn)dataGridView1.Columns["Foto"];
