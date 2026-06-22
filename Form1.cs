@@ -192,10 +192,23 @@ namespace CRUDMahasiswaADO
                     }
                 }
                 byte[] imgBytes = ConvertImageToBytes(fotoMhs);
+                string nimBaru = txtNIM.Text;
                 dbLogic.InsertMhs(txtNIM.Text, txtNama.Text, txtAlamat.Text, cmbJK.Text, dtpTanggalLahir.Value.Date, txtKodeProdi.Text, imgBytes);
                 MessageBox.Show("Data mahasiswa berhasil ditambahkan");
                 ClearForm();
                 LoadData();
+
+                // Cari dan highlight data yang baru ditambahkan
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    if (row.Cells["NIM"].Value != null && row.Cells["NIM"].Value.ToString() == nimBaru)
+                    {
+                        dataGridView1.ClearSelection();
+                        row.Selected = true;
+                        dataGridView1.FirstDisplayedScrollingRowIndex = row.Index;
+                        break;
+                    }
+                }
             }
             catch (SqlException ex)
             {
