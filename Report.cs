@@ -24,24 +24,19 @@ namespace CRUDMahasiswaADO
             try
             {
                 DataTable dtMahasiswa = dbLogic.getDataRekap(prodi, tglmasuk);
-
-                if (dtMahasiswa.Columns.Contains("NamaProdi"))
-                    dtMahasiswa.Columns["NamaProdi"].ColumnName = "KodeProdi";
-                if (dtMahasiswa.Columns.Contains("TanggalDaftar"))
-                    dtMahasiswa.Columns["TanggalDaftar"].ColumnName = "TanggalLahir";
-
-                if (!dtMahasiswa.Columns.Contains("NIM"))
-                    dtMahasiswa.Columns.Add("NIM", typeof(string));
-                if (!dtMahasiswa.Columns.Contains("FotoPath"))
-                    dtMahasiswa.Columns.Add("FotoPath", typeof(string));
-
-                dtMahasiswa.TableName = "Mahasiswa";
+                
+                // 1. Samakan nama tabel dengan nama Object Data Source di report Anda
+                dtMahasiswa.TableName = "CRUDMahasiswaADO_Data";
 
                 // listMahasiswa di modul mengacu pada objek Crystal Report kamu
                 CrystalReport1 listMahasiswa = new CrystalReport1();
 
-                listMahasiswa.Database.Tables[0].SetDataSource(dtMahasiswa);
-                listMahasiswa.SetDataSource(dtMahasiswa);
+                // 2. JURUS PAMUNGKAS: Paksa semua tabel di report untuk nyambung ke dtMahasiswa
+                for (int i = 0; i < listMahasiswa.Database.Tables.Count; i++)
+                {
+                    listMahasiswa.Database.Tables[i].SetDataSource(dtMahasiswa);
+                }
+
                 crystalReportViewer1.ReportSource = listMahasiswa;
                 crystalReportViewer1.Refresh();
             }
