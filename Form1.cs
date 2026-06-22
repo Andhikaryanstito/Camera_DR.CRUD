@@ -51,7 +51,7 @@ namespace CRUDMahasiswaADO
                 DataGridViewImageColumn fotoColumn = (DataGridViewImageColumn)dataGridView1.Columns["Foto"];
                 fotoColumn.ImageLayout = DataGridViewImageCellLayout.Stretch;
 
-                HitungTotal();
+              
 
                 foreach (DataGridViewColumn col in dataGridView1.Columns)
                 {
@@ -76,19 +76,7 @@ namespace CRUDMahasiswaADO
             }
         }
 
-        private void HitungTotal()
-        {
-            try
-            {
-                int total = (dbLogic.CountMhs().Equals(DBNull.Value)) ? 0 : dbLogic.CountMhs();
-                lblTotal.Visible = false;
-            }
-            catch (Exception ex)
-            {
-                simpanLog(ex.Message);
-                MessageBox.Show("Gagal load data: " + ex.Message);
-            }
-        }
+        
 
         private void ClearForm()
         {

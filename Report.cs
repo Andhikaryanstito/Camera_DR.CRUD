@@ -24,11 +24,12 @@ namespace CRUDMahasiswaADO
             try
             {
                 DataTable dtMahasiswa = dbLogic.getDataRekap(prodi, tglmasuk);
-                dtMahasiswa.TableName = "Mahasiswa";
+                dtMahasiswa.TableName = "sp_Report;1";
 
                 // listMahasiswa di modul mengacu pada objek Crystal Report kamu
                 CrystalReport1 listMahasiswa = new CrystalReport1();
 
+                listMahasiswa.Database.Tables[0].SetDataSource(dtMahasiswa);
                 listMahasiswa.SetDataSource(dtMahasiswa);
                 crystalReportViewer1.ReportSource = listMahasiswa;
                 crystalReportViewer1.Refresh();
