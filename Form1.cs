@@ -173,6 +173,7 @@ namespace CRUDMahasiswaADO
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
+            ClearForm();
             LoadData();
         }
 
