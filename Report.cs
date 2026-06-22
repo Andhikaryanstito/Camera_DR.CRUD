@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
@@ -24,6 +24,7 @@ namespace CRUDMahasiswaADO
             try
             {
                 DataTable dtMahasiswa = dbLogic.getDataRekap(prodi, tglmasuk);
+                dtMahasiswa.TableName = "Mahasiswa";
 
                 // listMahasiswa di modul mengacu pada objek Crystal Report kamu
                 CrystalReport1 listMahasiswa = new CrystalReport1();
